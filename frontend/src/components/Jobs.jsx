@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import FilterCard from "./FilterCard";
 import Job from "./Job";
 import Navbar from "./shared/Navbar";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const getSalaryRange = (label) => {
   switch (label) {
@@ -21,102 +21,213 @@ const Jobs = () => {
   const [filterJobs, setFilterJobs] = useState([]);
 
   useEffect(() => {
-    // Whenever allJobs or searchedQuery changes, recalc filterJobs
     if (!allJobs) {
       setFilterJobs([]);
       return;
     }
 
-    // If no filter selected, show all
     if (!searchedQuery || searchedQuery === "") {
       setFilterJobs(allJobs);
       return;
     }
 
-    // Otherwise, filter based on whether it's a salary-label or string-match
-    const sq = searchedQuery; // string from FilterCard
-
+    const sq = searchedQuery;
     const isSalaryLabel = typeof sq === "string" && sq.toLowerCase().includes("lakh");
+
     if (isSalaryLabel) {
       const range = getSalaryRange(sq);
       if (range) {
         const [min, max] = range;
-        // filter numeric job.salary (assumed stored as a Number in LPA)
         const arr = allJobs.filter((job) => {
-          // ensure job.salary exists and is a number
           if (typeof job.salary !== "number") return false;
           return job.salary >= min && job.salary <= max;
         });
         setFilterJobs(arr);
         return;
       }
-      // if salary label not recognized, fallback to all:
       setFilterJobs(allJobs);
       return;
     }
 
-    // Not a salary filter => treat as string filter on title, description, location, etc.
-    // Convert query to lower once
     const qLower = sq.toLowerCase();
     const arr = allJobs.filter((job) => {
-      // title match
       const titleMatch = job.title?.toLowerCase().includes(qLower);
-
-      // description match
       const descMatch = job.description?.toLowerCase().includes(qLower);
-
-      // location match
       const locMatch = job.location?.toLowerCase().includes(qLower);
-
-      // If you have an industry field in job, e.g. job.industry:
-      // const industryMatch = job.industry?.toLowerCase().includes(qLower);
-      // return titleMatch || descMatch || locMatch || industryMatch;
-
       return titleMatch || descMatch || locMatch;
     });
     setFilterJobs(arr);
   }, [allJobs, searchedQuery]);
 
   return (
-    <>
+    <div className="bg-gray-50 min-h-screen">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto mt-5">
-        <div className="flex gap-5">
-          {/* Sidebar filters */}
-          <div className="w-[20%]">
-            <FilterCard />
+      <div className="max-w-7xl mx-auto px-4 mt-8">
+        <div className="flex flex-col md:flex-row gap-8">
+          
+          {/* OPTIMIZED: Sticky Sidebar Filter */}
+          <div className="w-full md:w-1/4 lg:w-1/5">
+            <div className="sticky top-24">
+              <FilterCard />
+            </div>
           </div>
 
-          {/* Job list */}
-          <div className="w-[80%]">
+          {/* OPTIMIZED: Job List Grid */}
+          <div className="flex-1 pb-10">
             {filterJobs.length <= 0 ? (
-              <span>Job not found</span>
+              <div className="flex flex-col items-center justify-center h-[60vh] text-center bg-white rounded-2xl border border-dashed border-gray-300">
+                <p className="text-xl font-bold text-gray-800">No Jobs Found</p>
+                <p className="text-gray-500 mt-1">Try adjusting your filters to find what you're looking for.</p>
+              </div>
             ) : (
-              <div className="flex-1 h-[88vh] overflow-y-auto pb-5">
-                <div className="grid grid-cols-3 gap-4">
-                  {filterJobs.map((jobItem) => (
-                    <motion.div
-                      initial={{ opacity: 0, x: 100 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -100 }}
-                      transition={{ duration: 0.3 }}
-                      key={jobItem._id}
-                    >
-                      <Job job={jobItem} />
-                    </motion.div>
-                  ))}
+              <div className="h-[85vh] overflow-y-auto no-scrollbar pr-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <AnimatePresence>
+                    {filterJobs.map((jobItem) => (
+                      <motion.div
+                        layout
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.3 }}
+                        key={jobItem._id}
+                      >
+                        <Job job={jobItem} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
 export default Jobs;
+
+// import React, { useEffect, useState } from "react";
+// import { useSelector } from "react-redux";
+// import FilterCard from "./FilterCard";
+// import Job from "./Job";
+// import Navbar from "./shared/Navbar";
+// import { motion } from "framer-motion";
+
+// const getSalaryRange = (label) => {
+//   switch (label) {
+//     case "0-6 lakh":       return [0, 6];
+//     case "6-12 lakh":      return [6, 12];
+//     case "12-18 lakh":     return [12, 18];
+//     case "18-24 lakh":     return [18, 24];
+//     case "24 lakh above":  return [24, Infinity];
+//     default:               return null;
+//   }
+// };
+
+// const Jobs = () => {
+//   const { allJobs, searchedQuery } = useSelector((store) => store.job);
+//   const [filterJobs, setFilterJobs] = useState([]);
+
+//   useEffect(() => {
+//     // Whenever allJobs or searchedQuery changes, recalc filterJobs
+//     if (!allJobs) {
+//       setFilterJobs([]);
+//       return;
+//     }
+
+//     // If no filter selected, show all
+//     if (!searchedQuery || searchedQuery === "") {
+//       setFilterJobs(allJobs);
+//       return;
+//     }
+
+//     // Otherwise, filter based on whether it's a salary-label or string-match
+//     const sq = searchedQuery; // string from FilterCard
+
+//     const isSalaryLabel = typeof sq === "string" && sq.toLowerCase().includes("lakh");
+//     if (isSalaryLabel) {
+//       const range = getSalaryRange(sq);
+//       if (range) {
+//         const [min, max] = range;
+//         // filter numeric job.salary (assumed stored as a Number in LPA)
+//         const arr = allJobs.filter((job) => {
+//           // ensure job.salary exists and is a number
+//           if (typeof job.salary !== "number") return false;
+//           return job.salary >= min && job.salary <= max;
+//         });
+//         setFilterJobs(arr);
+//         return;
+//       }
+//       // if salary label not recognized, fallback to all:
+//       setFilterJobs(allJobs);
+//       return;
+//     }
+
+//     // Not a salary filter => treat as string filter on title, description, location, etc.
+//     // Convert query to lower once
+//     const qLower = sq.toLowerCase();
+//     const arr = allJobs.filter((job) => {
+//       // title match
+//       const titleMatch = job.title?.toLowerCase().includes(qLower);
+
+//       // description match
+//       const descMatch = job.description?.toLowerCase().includes(qLower);
+
+//       // location match
+//       const locMatch = job.location?.toLowerCase().includes(qLower);
+
+//       // If you have an industry field in job, e.g. job.industry:
+//       // const industryMatch = job.industry?.toLowerCase().includes(qLower);
+//       // return titleMatch || descMatch || locMatch || industryMatch;
+
+//       return titleMatch || descMatch || locMatch;
+//     });
+//     setFilterJobs(arr);
+//   }, [allJobs, searchedQuery]);
+
+//   return (
+//     <>
+//       <Navbar />
+
+//       <div className="max-w-7xl mx-auto mt-5">
+//         <div className="flex gap-5">
+//           {/* Sidebar filters */}
+//           <div className="w-[20%]">
+//             <FilterCard />
+//           </div>
+
+//           {/* Job list */}
+//           <div className="w-[80%]">
+//             {filterJobs.length <= 0 ? (
+//               <span>Job not found</span>
+//             ) : (
+//               <div className="flex-1 h-[88vh] overflow-y-auto pb-5">
+//                 <div className="grid grid-cols-3 gap-4">
+//                   {filterJobs.map((jobItem) => (
+//                     <motion.div
+//                       initial={{ opacity: 0, x: 100 }}
+//                       animate={{ opacity: 1, x: 0 }}
+//                       exit={{ opacity: 0, x: -100 }}
+//                       transition={{ duration: 0.3 }}
+//                       key={jobItem._id}
+//                     >
+//                       <Job job={jobItem} />
+//                     </motion.div>
+//                   ))}
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default Jobs;
 
 // import { useSelector } from "react-redux";
 // import FilterCard from "./FilterCard";

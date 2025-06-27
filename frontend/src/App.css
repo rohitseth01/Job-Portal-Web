@@ -1,4 +1,50 @@
+/* Reset default Vite margins and paddings */
 #root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left; /* Essential for dashboard layouts */
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f9fafb; /* Light gray background (bg-gray-50) */
+  color: #111827; /* Dark gray text (text-gray-900) */
+}
+
+/* Custom Scrollbar Utility - "No Scrollbar" look for job lists */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Premium Selection Colors */
+::selection {
+  background-color: #6a38c226; /* Light purple tint */
+  color: #6a38c2;
+}
+
+/* Smooth Link Transitions */
+a {
+  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+}
+
+/* Global Card Lift Effect for any .card class used outside of Tailwind */
+.card-lift {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card-lift:hover {
+  transform: translateY(-5px);
+}
+
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
@@ -39,4 +85,4 @@
 
 .read-the-docs {
   color: #888;
-}
+} */

@@ -10,11 +10,7 @@ import applicationRoute from "./routes/application.route.js"
 
 dotenv.config({});
 
-
-
 const app=express();
-
-
 
 //middleware
 app.use(express.json());
@@ -38,8 +34,6 @@ app.use("/api/v1/application",applicationRoute);
 
 
 //http://localhost:8000/api/v1/user/register -api
-
-
 
 
 app.listen(PORT,()=>{

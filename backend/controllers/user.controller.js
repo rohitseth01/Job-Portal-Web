@@ -1,3 +1,4 @@
+
 import bcrypt from "bcryptjs";
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
@@ -84,7 +85,7 @@ export const login = async (req, res) => {
     const token = await jwt.sign(tokendata, process.env.SECRET_KEY, {
       expiresIn: "1d",
     });
-
+ 
     user = {
       _id: user._id,
       fullname: user.fullname,

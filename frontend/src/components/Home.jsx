@@ -1,35 +1,43 @@
-import React, { useEffect } from "react";
-import Navbar from "./shared/Navbar";
-import HeroSection from "./HeroSection";
-import CategoryCarousel from "./CategoryCarousel";
-import LatestJobs from "./LatestJobs";
-import Footer from "./shared/Footer";
-import useGetAllJobs from "../hooks/useGetAllJobs";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from 'react'
+import Navbar from './shared/Navbar'
+import HeroSection from './HeroSection'
+import CategorySection from './CategorySection'
+import LatestJobs from './LatestJobs'
+import Footer from './shared/Footer'
+import TopCompanies from './TopCompanies' // Import the new file
+import useGetAllJobs from '@/hooks/useGetAllJobs'
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { setsearchedQuery } from '../redux/jobSlice'
 
 const Home = () => {
   useGetAllJobs();
-  const navigate=useNavigate()
-  const {user}=useSelector(store=>store.auth)
+  const { user } = useSelector(store => store.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  //jsx return karne se peahle useEffect call hota  hai
-
-  useEffect(()=>{
-    if(user?.role==='recruiter'){
-      navigate("/admin/companies")
+  useEffect(() => {
+    dispatch(setsearchedQuery("")); 
+    if (user?.role === 'recruiter') {
+      navigate("/admin/companies");
     }
-  },[])
-  
-  return (
-    <div>
-      <Navbar />
-      <HeroSection/>
-      <CategoryCarousel/>
-      <LatestJobs />
-      <Footer/>
-    </div>
-  );
-};
+  }, [user, navigate, dispatch]);
 
-export default Home;
+  return (
+    <div className="bg-white flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-grow">
+        <HeroSection />
+        <TopCompanies /> 
+        {/* Only apply spacing to the bottom content */}
+        <div className="mt-16 space-y-20 pb-20">
+            <CategorySection />
+            <LatestJobs />
+        </div>
+      </main>
+      <Footer />
+    </div>
+  )
+}
+
+export default Home
