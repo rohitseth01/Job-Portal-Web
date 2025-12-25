@@ -26,7 +26,7 @@ const jobSlice = createSlice({
         setAllAppliedJobs: (state, action) => {
             state.allAppliedJobs = action.payload;
         },
-        setSearchedQuery: (state, action) => { // Capital S
+        setSearchedQuery: (state, action) => {
             state.searchedQuery = action.payload;
         }
     }
