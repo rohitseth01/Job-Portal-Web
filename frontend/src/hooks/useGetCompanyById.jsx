@@ -1,31 +1,29 @@
-
-import axios from 'axios';
-import { useEffect } from 'react';
-import { COMPANY_API_END_POINT } from '../utils/constant';
-import { useDispatch } from 'react-redux';
-
-import { setSingleCompany } from '../redux/companySlice';
+import axios from 'axios'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setSingleCompany } from '../redux/companySlice'
+import { COMPANY_API_END_POINT } from '../utils/constant'
 
 const useGetCompanyById = (companyId) => {
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
+    const { user } = useSelector(store => store.auth); // Access user state
 
-  useEffect(() => {
-    const fetchSingleCompany = async () => {
-      try {
-        const res = await axios.get(`${COMPANY_API_END_POINT}/get/${companyId}`, {
-          withCredentials: true,
-        });
-        console.log(res.data.company);
-        if (res.data.success) {
-          dispatch(setSingleCompany(res.data.company));
+    useEffect(() => {
+        const fetchSingleCompany = async () => {
+            if (!user || !companyId) return; // Prevent 401: only fetch if user is logged in
+            try {
+                const res = await axios.get(`${COMPANY_API_END_POINT}/get/${companyId}`, { withCredentials: true });
+                if (res.data.success) {
+                    dispatch(setSingleCompany(res.data.company));
+                }
+            } catch (error) {
+                if (error.response?.status !== 401) {
+                    console.log(error);
+                }
+            }
         }
-      } catch (error) {
-        console.error("Error fetching jobs:", error);
-      }
-    };
+        fetchSingleCompany();
+    }, [companyId, user, dispatch]);
+}
 
-    fetchSingleCompany(); 
-  },[companyId,dispatch]);
-};
-
-export default useGetCompanyById;
+export default useGetCompanyById
