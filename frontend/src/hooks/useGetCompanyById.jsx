@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import { useEffect } from 'react';
 import { COMPANY_API_END_POINT } from '../utils/constant';
@@ -15,7 +16,6 @@ const useGetCompanyById = (companyId) => {
           withCredentials: true,
         });
         console.log(res.data.company);
-        
         if (res.data.success) {
           dispatch(setSingleCompany(res.data.company));
         }
