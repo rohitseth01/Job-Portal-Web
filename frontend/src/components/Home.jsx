@@ -4,11 +4,11 @@ import HeroSection from './HeroSection'
 import CategorySection from './CategorySection'
 import LatestJobs from './LatestJobs'
 import Footer from './shared/Footer'
-import TopCompanies from './TopCompanies' // Import the new file
+import TopCompanies from './TopCompanies' 
 import useGetAllJobs from '@/hooks/useGetAllJobs'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { setsearchedQuery } from '../redux/jobSlice'
+import { setSearchedQuery } from '../redux/jobSlice' // FIXED: Capital 'S'
 
 const Home = () => {
   useGetAllJobs();
@@ -17,7 +17,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(setsearchedQuery("")); 
+    dispatch(setSearchedQuery("")); // FIXED: Capital 'S'
     if (user?.role === 'recruiter') {
       navigate("/admin/companies");
     }
@@ -29,7 +29,6 @@ const Home = () => {
       <main className="flex-grow">
         <HeroSection />
         <TopCompanies /> 
-        {/* Only apply spacing to the bottom content */}
         <div className="mt-16 space-y-20 pb-20">
             <CategorySection />
             <LatestJobs />
