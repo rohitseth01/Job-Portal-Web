@@ -12,8 +12,8 @@ import {
     REGISTER,
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import companySlice from "./companySlice"
-import applicationSlice from "./applicationSlice"
+import companySlice from "./companySlice";
+import applicationSlice from "./applicationSlice";
 
 const persistConfig = {
     key: 'root',
@@ -21,15 +21,15 @@ const persistConfig = {
     storage,
 }
 
+// Ensure ALL slices are included in the rootReducer
 const rootReducer = combineReducers({
-    auth:authSlice,
-    job:jobSlice,
-    company:companySlice,
-    application:applicationSlice
+    auth: authSlice,
+    job: jobSlice,
+    company: companySlice,
+    application: applicationSlice // This must be here for Applicants.jsx to work
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
-
 
 const store = configureStore({
     reducer: persistedReducer,
@@ -40,4 +40,5 @@ const store = configureStore({
             },
         }),
 });
+
 export default store;
