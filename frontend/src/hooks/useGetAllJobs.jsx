@@ -13,13 +13,14 @@ const useGetAllJobs = () => {
         const fetchAllJobs = async () => {
             if (!user) return; 
             try {
+                // Ensure searchedQuery is handled safely
                 const url = searchedQuery 
-                    ? `${JOB_API_END_POINT}/get?keyword=${searchedQuery}` 
+                    ? `${JOB_API_END_POINT}/get?keyword=${encodeURIComponent(searchedQuery)}` 
                     : `${JOB_API_END_POINT}/get`;
 
                 const res = await axios.get(url, { withCredentials: true });
                 if (res.data.success) {
-                    dispatch(setAllJobs(res.data.jobs));
+                    dispatch(setAllJobs(res.data.jobs || []));
                 }
             } catch (error) {
                 if (error.response?.status !== 401) {

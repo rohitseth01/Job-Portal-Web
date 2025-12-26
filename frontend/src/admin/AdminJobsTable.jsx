@@ -10,19 +10,19 @@ import axios from "axios";
 import { toast } from "sonner";
 
 const AdminJobsTable = () => {
-    const { allAdminJobs, searchJobByText } = useSelector((store) => store.job);
+    const { allAdminJobs = [], searchJobByText = "" } = useSelector((store) => store.job);
     const [filterJobs, setFilterJobs] = useState(allAdminJobs);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const filteredJobs = allAdminJobs.filter((job) => {
+        const filteredJobs = allAdminJobs?.filter((job) => {
             if (!searchJobByText) return true;
             return (
                 job?.title?.toLowerCase().includes(searchJobByText.toLowerCase()) ||
-                job?.company?.name.toLowerCase().includes(searchJobByText.toLowerCase())
+                job?.company?.name?.toLowerCase().includes(searchJobByText.toLowerCase())
             );
         });
-        setFilterJobs(filteredJobs);
+        setFilterJobs(filteredJobs || []);
     }, [allAdminJobs, searchJobByText]);
 
     const deleteJobHandler = async (jobId) => {
@@ -67,7 +67,7 @@ const AdminJobsTable = () => {
                         </TableRow>
                     ) : (
                         filterJobs?.map((job) => (
-                            <TableRow key={job._id} className="group hover:bg-purple-50/30 transition-all duration-200 border-b border-gray-50">
+                            <TableRow key={job?._id} className="group hover:bg-purple-50/30 transition-all duration-200 border-b border-gray-50">
                                 <TableCell className="py-5 pl-8">
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center overflow-hidden shadow-sm">
@@ -85,7 +85,7 @@ const AdminJobsTable = () => {
                                     </div>
                                 </TableCell>
                                 <TableCell>
-                                    <span className="text-gray-500 font-semibold text-sm">{job?.createdAt.split("T")[0]}</span>
+                                    <span className="text-gray-500 font-semibold text-sm">{job?.createdAt?.split("T")[0]}</span>
                                 </TableCell>
                                 <TableCell className="text-right pr-10">
                                     <Popover>
@@ -96,16 +96,16 @@ const AdminJobsTable = () => {
                                         </PopoverTrigger>
                                         <PopoverContent className="w-48 p-2 rounded-2xl shadow-2xl border-gray-100 mr-4">
                                             <div className="flex flex-col gap-1">
-                                                <button onClick={() => navigate(`/admin/jobs/${job._id}/applicants`)} className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-gray-700 hover:bg-purple-50 hover:text-[#6A38C2] rounded-xl cursor-pointer">
+                                                <button onClick={() => navigate(`/admin/jobs/${job?._id}/applicants`)} className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-gray-700 hover:bg-purple-50 hover:text-[#6A38C2] rounded-xl cursor-pointer">
                                                     <Eye size={16} />
                                                     <span>Review Applicants</span>
                                                 </button>
-                                                <button onClick={() => navigate(`/admin/companies/${job._id}`)} className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-50 rounded-xl cursor-pointer">
+                                                <button onClick={() => navigate(`/admin/companies/${job?._id}`)} className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-50 rounded-xl cursor-pointer">
                                                     <Edit2 size={16} />
                                                     <span>Edit Posting</span>
                                                 </button>
                                                 <div className="h-px bg-gray-100 my-1" />
-                                                <button onClick={() => deleteJobHandler(job._id)} className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 rounded-xl cursor-pointer">
+                                                <button onClick={() => deleteJobHandler(job?._id)} className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 rounded-xl cursor-pointer">
                                                     <Trash2 size={16} />
                                                     <span>Delete Post</span>
                                                 </button>
