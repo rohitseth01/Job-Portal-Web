@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Navbar from "./shared/Navbar";
+// Removed duplicate Navbar import
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Contact, Mail, Pen, FileText } from "lucide-react";
@@ -17,23 +17,29 @@ const Profile = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <Navbar />
       <div className="max-w-4xl mx-auto px-4 py-10">
-        
         {/* Main Profile Card */}
         <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
           <div className="flex justify-between items-start">
             <div className="flex flex-col md:flex-row items-center gap-6">
               <Avatar className="h-28 w-28 border-4 border-purple-50 shadow-md">
                 <AvatarImage
-                  src={user?.profile?.profilePhoto || "https://github.com/shadcn.png"}
+                  src={
+                    user?.profile?.profilePhoto &&
+                    user?.profile?.profilePhoto !== ""
+                      ? user.profile.profilePhoto
+                      : "https://cdn-icons-png.flaticon.com/512/174/174857.png"
+                  }
                   alt="profile"
                 />
               </Avatar>
               <div className="text-center md:text-left">
-                <h1 className="font-extrabold text-2xl text-gray-900">{user?.fullname}</h1>
+                <h1 className="font-extrabold text-2xl text-gray-900">
+                  {user?.fullname}
+                </h1>
                 <p className="text-gray-500 mt-1 max-w-md leading-relaxed">
-                  {user?.profile?.bio || "Add a short bio to introduce yourself."}
+                  {user?.profile?.bio ||
+                    "Add a short bio to introduce yourself."}
                 </p>
               </div>
             </div>
@@ -55,32 +61,40 @@ const Profile = () => {
             </div>
             <div className="flex items-center gap-3 text-gray-700">
               <Contact className="text-[#6A38C2]" size={20} />
-              <span className="font-medium">{user?.phoneNumber || "No phone added"}</span>
+              <span className="font-medium">
+                {user?.phoneNumber || "No phone added"}
+              </span>
             </div>
           </div>
 
           {/* Skills Section */}
           <div className="mb-8">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-gray-400 mb-3">Skills</h2>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-gray-400 mb-3">
+              Skills
+            </h2>
             <div className="flex flex-wrap gap-2">
               {user?.profile?.skills?.length > 0 ? (
                 user?.profile?.skills.map((item, index) => (
-                  <Badge 
-                    key={index} 
+                  <Badge
+                    key={index}
                     className="bg-purple-50 text-[#6A38C2] border-none font-bold px-4 py-1.5 rounded-lg hover:bg-purple-100 transition-colors"
                   >
                     {item}
                   </Badge>
                 ))
               ) : (
-                <span className="text-gray-400 italic">No skills added yet.</span>
+                <span className="text-gray-400 italic">
+                  No skills added yet.
+                </span>
               )}
             </div>
           </div>
 
           {/* Resume Section */}
           <div className="flex flex-col gap-2 border-t border-gray-100 pt-6">
-            <Label className="text-sm font-bold uppercase tracking-wider text-gray-400">Resume</Label>
+            <Label className="text-sm font-bold uppercase tracking-wider text-gray-400">
+              Resume
+            </Label>
             {user?.profile?.resume ? (
               <a
                 target="_blank"
@@ -101,18 +115,19 @@ const Profile = () => {
 
         {/* Applied Jobs Table Section */}
         <div className="mt-12">
-          <h2 className="text-2xl font-extrabold text-gray-900 mb-6">Applied Jobs</h2>
+          <h2 className="text-2xl font-extrabold text-gray-900 mb-6">
+            Applied Jobs
+          </h2>
           <AppliedJobTable />
         </div>
       </div>
-      
+
       <UpdateProfileDialog open={open} setOpen={setOpen} />
     </div>
   );
 };
 
 export default Profile;
-
 
 // import React, { useState } from "react";
 // import Navbar from "./shared/Navbar";

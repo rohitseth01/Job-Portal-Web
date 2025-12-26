@@ -2,17 +2,22 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import FilterCard from "./FilterCard";
 import Job from "./Job";
-import Navbar from "./shared/Navbar";
 import { motion, AnimatePresence } from "framer-motion";
 
 const getSalaryRange = (label) => {
   switch (label) {
-    case "0-6 lakh":       return [0, 6];
-    case "6-12 lakh":      return [6, 12];
-    case "12-18 lakh":     return [12, 18];
-    case "18-24 lakh":     return [18, 24];
-    case "24 lakh above":  return [24, Infinity];
-    default:               return null;
+    case "0-6 lakh":
+      return [0, 6];
+    case "6-12 lakh":
+      return [6, 12];
+    case "12-18 lakh":
+      return [12, 18];
+    case "18-24 lakh":
+      return [18, 24];
+    case "24 lakh above":
+      return [24, Infinity];
+    default:
+      return null;
   }
 };
 
@@ -32,7 +37,8 @@ const Jobs = () => {
     }
 
     const sq = searchedQuery;
-    const isSalaryLabel = typeof sq === "string" && sq.toLowerCase().includes("lakh");
+    const isSalaryLabel =
+      typeof sq === "string" && sq.toLowerCase().includes("lakh");
 
     if (isSalaryLabel) {
       const range = getSalaryRange(sq);
@@ -60,64 +66,62 @@ const Jobs = () => {
   }, [allJobs, searchedQuery]);
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <Navbar />
-
-      <div className="max-w-7xl mx-auto px-4 mt-8">
-        <div className="flex flex-col md:flex-row gap-8">
-          
-          {/* OPTIMIZED: Sticky Sidebar Filter */}
-          <div className="w-full md:w-1/4 lg:w-1/5">
-            <div className="sticky top-24">
+    <section className="bg-gradient-to-b from-purple-50 to-white min-h-screen py-10">
+      <div className="max-w-7xl mx-auto px-4">
+        <h1 className="font-black text-2xl mb-8 text-gray-900">
+          Browse <span className="text-[#6A38C2]">Jobs</span>
+        </h1>
+        <div className="flex flex-col md:flex-row gap-10">
+          {/* Sidebar Filter */}
+          <aside className="w-full md:w-1/4 lg:w-1/5 mb-8 md:mb-0">
+            <div className="md:sticky md:top-28 bg-white rounded-2xl shadow-md border border-gray-100 p-6">
               <FilterCard />
             </div>
-          </div>
+          </aside>
 
-          {/* OPTIMIZED: Job List Grid */}
-          <div className="flex-1 pb-10">
+          {/* Job List Grid */}
+          <main className="flex-1 pb-10">
             {filterJobs.length <= 0 ? (
-              <div className="flex flex-col items-center justify-center h-[60vh] text-center bg-white rounded-2xl border border-dashed border-gray-300">
+              <div className="flex flex-col items-center justify-center h-[60vh] text-center bg-white rounded-2xl border border-dashed border-gray-300 shadow-sm">
                 <p className="text-xl font-bold text-gray-800">No Jobs Found</p>
-                <p className="text-gray-500 mt-1">Try adjusting your filters to find what you're looking for.</p>
               </div>
             ) : (
-              <div className="h-[85vh] overflow-y-auto no-scrollbar pr-2">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <AnimatePresence>
-                    {filterJobs.map((jobItem) => (
-                      <motion.div
-                        layout
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        transition={{ duration: 0.3 }}
-                        key={jobItem._id}
-                      >
-                        <Job job={jobItem} />
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
-              </div>
+              <AnimatePresence>
+                <motion.div
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+                  style={{ minHeight: "60vh" }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  {filterJobs.map((job) => (
+                    <Job key={job._id} job={job} />
+                  ))}
+                </motion.div>
+              </AnimatePresence>
             )}
-          </div>
+          </main>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
 export default Jobs;
 
-// import React, { useEffect, useState } from "react";
+{
+  /* // import React, { useEffect, useState } from "react";
 // import { useSelector } from "react-redux";
 // import FilterCard from "./FilterCard";
 // import Job from "./Job";
 // import Navbar from "./shared/Navbar";
 // import { motion } from "framer-motion";
 
-// const getSalaryRange = (label) => {
-//   switch (label) {
+// const getSalaryRange = (label) => { */
+}
+{
+  /* //   switch (label) { */
+}
 //     case "0-6 lakh":       return [0, 6];
 //     case "6-12 lakh":      return [6, 12];
 //     case "12-18 lakh":     return [12, 18];

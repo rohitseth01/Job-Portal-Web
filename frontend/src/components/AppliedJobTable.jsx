@@ -12,7 +12,8 @@ import { Badge } from "./ui/badge";
 import { useSelector } from "react-redux";
 
 const AppliedJobTable = () => {
-  const { allAppliedJobs } = useSelector((store) => store.job);
+  // Use the correct slice: application, not job
+  const { allAppliedJobs } = useSelector((store) => store.application);
 
   // Helper to style status badges
   const getStatusStyle = (status) => {
@@ -31,26 +32,35 @@ const AppliedJobTable = () => {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       <Table>
-        <TableCaption className="mb-4">A list of your recent job applications</TableCaption>
+        <TableCaption className="mb-4">
+          A list of your recent job applications
+        </TableCaption>
         <TableHeader className="bg-gray-50/50">
           <TableRow>
-            <TableHead className="w-[120px] font-bold text-gray-700">Date</TableHead>
+            <TableHead className="w-[120px] font-bold text-gray-700">
+              Date
+            </TableHead>
             <TableHead className="font-bold text-gray-700">Job Role</TableHead>
             <TableHead className="font-bold text-gray-700">Company</TableHead>
-            <TableHead className="text-right font-bold text-gray-700">Status</TableHead>
+            <TableHead className="text-right font-bold text-gray-700">
+              Status
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {allAppliedJobs.length <= 0 ? (
             <TableRow>
-              <TableCell colSpan={4} className="text-center py-10 text-gray-500 italic">
+              <TableCell
+                colSpan={4}
+                className="text-center py-10 text-gray-500 italic"
+              >
                 You haven't applied to any jobs yet.
               </TableCell>
             </TableRow>
           ) : (
             allAppliedJobs.map((appliedJob) => (
-              <TableRow 
-                key={appliedJob?._id} 
+              <TableRow
+                key={appliedJob?._id}
                 className="hover:bg-gray-50/50 transition-colors duration-200"
               >
                 <TableCell className="font-medium text-gray-600">
@@ -63,7 +73,11 @@ const AppliedJobTable = () => {
                   {appliedJob?.job?.company?.name}
                 </TableCell>
                 <TableCell className="text-right">
-                  <Badge className={`font-bold px-3 py-1 rounded-full text-[10px] ${getStatusStyle(appliedJob.status)}`}>
+                  <Badge
+                    className={`font-bold px-3 py-1 rounded-full text-[10px] ${getStatusStyle(
+                      appliedJob.status
+                    )}`}
+                  >
                     {appliedJob?.status?.toUpperCase()}
                   </Badge>
                 </TableCell>
@@ -78,7 +92,6 @@ const AppliedJobTable = () => {
 
 export default AppliedJobTable;
 
-
 // import React from "react";
 // import {
 //   Table,
@@ -91,7 +104,6 @@ export default AppliedJobTable;
 // } from "./ui/table";
 // import { Badge } from "./ui/badge";
 // import { useSelector } from "react-redux";
-
 
 // const AppliedJobTable = () => {
 //   const {allAppliedJobs}=useSelector(store=>store.job)

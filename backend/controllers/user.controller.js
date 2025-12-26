@@ -14,7 +14,14 @@ export const register = async (req, res) => {
         success: false,
       });
     }
+
     const file = req.file;
+    if (!file) {
+      return res.status(400).json({
+        message: "Avatar (profile image) is required.",
+        success: false,
+      });
+    }
     const fileUri = getDataUri(file);
     const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
@@ -212,18 +219,44 @@ export const updateProfile = async (req, res) => {
   try {
     const { fullname, email, phoneNumber, bio, skills } = req.body;
 
-    const file = req.file;
-    //no need
-    // if (!fullname || !email || !phoneNumber || !bio || !skills) {
-    //   return res.status(400).json({
-    //     message: "Something is missing",
-    //     success: false,
-    //   });
-    // }
+    // Support multiple files: req.files (from multer.fields)
+    let resumeFile = null;
+    let profilePhotoFile = null;
+    if (req.files) {
+      if (req.files.resume && req.files.resume[0]) {
+        resumeFile = req.files.resume[0];
+      }
+      if (req.files.profilePhoto && req.files.profilePhoto[0]) {
+        profilePhotoFile = req.files.profilePhoto[0];
+      }
+    } else if (req.file) {
+      // fallback for single file
+      if (req.file.fieldname === "resume") resumeFile = req.file;
+      if (req.file.fieldname === "profilePhoto") profilePhotoFile = req.file;
+    }
 
-    //cloudinary aayega for file
-    const fileUri = getDataUri(file);
-    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+    let resumeCloudUrl = null, resumeOriginalName = null;
+    let profilePhotoCloudUrl = null;
+    // Defensive: Only upload if file exists and is valid
+    if (resumeFile) {
+      try {
+        const fileUri = getDataUri(resumeFile);
+        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+        resumeCloudUrl = cloudResponse.secure_url;
+        resumeOriginalName = resumeFile.originalname;
+      } catch (err) {
+        return res.status(500).json({ message: "Resume upload failed", error: err.message, success: false });
+      }
+    }
+    if (profilePhotoFile) {
+      try {
+        const fileUri = getDataUri(profilePhotoFile);
+        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+        profilePhotoCloudUrl = cloudResponse.secure_url;
+      } catch (err) {
+        return res.status(500).json({ message: "Profile photo upload failed", error: err.message, success: false });
+      }
+    }
 
     let skillsArray;
     if (skills) {
@@ -245,10 +278,14 @@ export const updateProfile = async (req, res) => {
     if (phoneNumber) user.phoneNumber = phoneNumber;
     if (bio) user.profile.bio = bio;
     if (skills) user.profile.skills = skillsArray;
-    //resume comes later here
-    if (cloudResponse) {
-      user.profile.resume = cloudResponse.secure_url; //save the cloudinary url
-      user.profile.resumeOriginalName = file.originalname; //save the original file name
+
+    // Save uploaded files to user profile
+    if (profilePhotoCloudUrl) {
+      user.profile.profilePhoto = profilePhotoCloudUrl;
+    }
+    if (resumeCloudUrl) {
+      user.profile.resume = resumeCloudUrl;
+      user.profile.resumeOriginalName = resumeOriginalName;
     }
 
     await user.save();
@@ -269,5 +306,7 @@ export const updateProfile = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ message: error.message || "Server error", success: false });
+  }
   }
 };

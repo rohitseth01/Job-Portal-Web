@@ -5,7 +5,12 @@
 // frontend/src/utils/constant.js
 // frontend/src/utils/constant.js
 // frontend/src/utils/constant.js
-const BASE_URL = "https://job-portal-web-7t1r.onrender.com"; 
+
+// Use production backend on Netlify, local backend in development
+const BASE_URL =
+  typeof window !== "undefined" && window.location.hostname !== "localhost"
+    ? "https://job-portal-web-7t1r.onrender.com"
+    : "http://localhost:8000";
 
 export const USER_API_END_POINT = `${BASE_URL}/api/v1/user`;
 export const JOB_API_END_POINT = `${BASE_URL}/api/v1/job`;

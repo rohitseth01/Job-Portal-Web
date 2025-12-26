@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import Navbar from "./shared/Navbar";
 import Job from "./Job";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchedQuery } from "../redux/jobSlice"; // Fixed: Capital S
@@ -16,19 +15,22 @@ const Browse = () => {
   }, [dispatch]);
 
   return (
-    <div>
-      <Navbar />
-      <div className="max-w-7xl mx-auto my-10">
-        <h1 className="font-bold text-xl my-10">
-          Search Results ({allJobs.length})
+    <section className="bg-gradient-to-b from-purple-50 to-white min-h-screen py-10">
+      <div className="max-w-7xl mx-auto px-4">
+        <h1 className="font-black text-2xl mb-8 text-gray-900">
+          Search <span className="text-[#6A38C2]">Results</span>{" "}
+          <span className="text-gray-400 font-normal">({allJobs.length})</span>
         </h1>
-        <div className="grid grid-cols-3 gap-4">
-          {allJobs.map((job) => {
-            return <Job key={job._id} job={job} />;
-          })}
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          style={{ minHeight: "60vh" }}
+        >
+          {allJobs.map((job) => (
+            <Job key={job._id} job={job} />
+          ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
