@@ -157,17 +157,31 @@ export const updateProfile = async (req, res) => {
       if (req.file.fieldname === "profilePhoto") profilePhotoFile = req.file;
     }
 
-    let resumeCloudUrl = null, resumeOriginalName = null;
+    let resumeCloudUrl = null,
+      resumeOriginalName = null;
     let profilePhotoCloudUrl = null;
 
+    // Locate this section inside updateProfile for the resume upload
     if (resumeFile) {
       try {
         const fileUri = getDataUri(resumeFile);
-        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+        // Add resource_type: "auto" here
+        const cloudResponse = await cloudinary.uploader.upload(
+          fileUri.content,
+          {
+            resource_type: "auto",
+          }
+        );
         resumeCloudUrl = cloudResponse.secure_url;
         resumeOriginalName = resumeFile.originalname;
       } catch (err) {
-        return res.status(500).json({ message: "Resume upload failed", error: err.message, success: false });
+        return res
+          .status(500)
+          .json({
+            message: "Resume upload failed",
+            error: err.message,
+            success: false,
+          });
       }
     }
 
@@ -177,7 +191,13 @@ export const updateProfile = async (req, res) => {
         const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
         profilePhotoCloudUrl = cloudResponse.secure_url;
       } catch (err) {
-        return res.status(500).json({ message: "Profile photo upload failed", error: err.message, success: false });
+        return res
+          .status(500)
+          .json({
+            message: "Profile photo upload failed",
+            error: err.message,
+            success: false,
+          });
       }
     }
 
@@ -186,7 +206,7 @@ export const updateProfile = async (req, res) => {
       skillsArray = skills.split(",");
     }
 
-    const userId = req.id; 
+    const userId = req.id;
     let user = await User.findById(userId);
 
     if (!user) {
@@ -228,6 +248,8 @@ export const updateProfile = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: error.message || "Server error", success: false });
+    return res
+      .status(500)
+      .json({ message: error.message || "Server error", success: false });
   }
 };
