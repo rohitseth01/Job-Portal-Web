@@ -1,5 +1,5 @@
 import React from 'react';
-import { Facebook, Twitter, Linkedin, Instagram } from 'lucide-react'; // Using Lucide for cleaner icons
+import { Facebook, Twitter, Linkedin, Instagram } from 'lucide-react'; 
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
@@ -30,8 +30,13 @@ const Footer = () => {
                         <div>
                             <h3 className="font-bold text-gray-900 mb-4 uppercase text-[10px] tracking-widest">Support</h3>
                             <ul className="text-sm text-gray-500 space-y-3 font-medium">
-                                <li className="hover:text-[#6A38C2] cursor-pointer transition-colors">Privacy Policy</li>
-                                <li className="hover:text-[#6A38C2] cursor-pointer transition-colors">Contact Us</li>
+                                {/* Modified: Added Links to the support items */}
+                                <li>
+                                    <Link to="/privacy" className="hover:text-[#6A38C2] transition-colors">Privacy Policy</Link>
+                                </li>
+                                <li>
+                                    <Link to="/contact" className="hover:text-[#6A38C2] transition-colors">Contact Us</Link>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -43,12 +48,20 @@ const Footer = () => {
                         © 2025 JobPortal. All rights reserved.
                     </p>
                     
-                    {/* Social Icons using Lucide */}
+                    {/* Social Icons with Links */}
                     <div className="flex items-center gap-6 text-gray-400">
-                        <Facebook size={18} className="hover:text-[#6A38C2] cursor-pointer transition-all hover:scale-110" />
-                        <Twitter size={18} className="hover:text-[#6A38C2] cursor-pointer transition-all hover:scale-110" />
-                        <Linkedin size={18} className="hover:text-[#6A38C2] cursor-pointer transition-all hover:scale-110" />
-                        <Instagram size={18} className="hover:text-[#6A38C2] cursor-pointer transition-all hover:scale-110" />
+                        <a href="https://facebook.com" target="_blank" rel="noreferrer">
+                            <Facebook size={18} className="hover:text-[#6A38C2] cursor-pointer transition-all hover:scale-110" />
+                        </a>
+                        <a href="https://twitter.com" target="_blank" rel="noreferrer">
+                            <Twitter size={18} className="hover:text-[#6A38C2] cursor-pointer transition-all hover:scale-110" />
+                        </a>
+                        <a href="https://linkedin.com" target="_blank" rel="noreferrer">
+                            <Linkedin size={18} className="hover:text-[#6A38C2] cursor-pointer transition-all hover:scale-110" />
+                        </a>
+                        <a href="https://instagram.com" target="_blank" rel="noreferrer">
+                            <Instagram size={18} className="hover:text-[#6A38C2] cursor-pointer transition-all hover:scale-110" />
+                        </a>
                     </div>
                 </div>
             </div>

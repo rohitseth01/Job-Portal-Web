@@ -2,7 +2,7 @@ import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, User2Icon, Briefcase, Building2, LayoutDashboard } from "lucide-react";
+import { LogOut, User2Icon, Briefcase, Building2, LayoutDashboard, PhoneCall } from "lucide-react"; // Added PhoneCall icon
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
@@ -57,6 +57,7 @@ const Navbar = () => {
                     <Briefcase size={18} /> Jobs
                   </Link>
                 </li>
+                {/* Optional: Add Contact Us for Recruiters here too if needed */}
               </>
             ) : (
               <>
@@ -71,6 +72,12 @@ const Navbar = () => {
                 </li>
               </>
             )}
+            {/* Added Contact Us link for everyone */}
+            <li className="hover:text-[#6A38C2] transition-colors">
+              <Link to="/contact" className="flex items-center gap-2">
+                Contact Us
+              </Link>
+            </li>
           </ul>
 
           {!user ? (
@@ -111,7 +118,6 @@ const Navbar = () => {
                 </div>
 
                 <div className="p-2 flex flex-col">
-                  {/* DYNAMIC PROFILE LINK: Routes to /admin/profile for recruiters and /profile for students */}
                   <Link 
                     to={user?.role === 'recruiter' ? "/admin/profile" : "/profile"} 
                     className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-purple-50 hover:text-[#6A38C2] rounded-lg transition-colors"
@@ -138,6 +144,10 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+
+
+
 
 // import React from "react";
 // import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
